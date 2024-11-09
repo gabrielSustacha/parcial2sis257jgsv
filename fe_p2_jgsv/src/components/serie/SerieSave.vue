@@ -6,6 +6,7 @@ import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import DatePicker from 'primevue/datepicker';
+import Dropdown from 'primevue/dropdown'; // Importar Dropdown
 import { computed, ref, watch } from 'vue'
 
 const ENDPOINT = 'series'
@@ -34,6 +35,15 @@ watch(
     }
 )
 
+// Opciones para tipoClasificacion
+const tipoClasificacionOptions = [
+    { label: 'Todo Público', value: 'A' },
+    { label: 'Para Niños', value: 'B' },
+    { label: 'Mayor a 12 Años', value: 'B12' },
+    { label: 'Mayor a 15 Años', value: 'B15' },
+    { label: 'Público Mayor a 18 Años', value: 'C' }
+];
+
 async function handleSave() {
     try {
         const body = {
@@ -41,7 +51,8 @@ async function handleSave() {
             sinopsis: serie.value.sinopsis,
             director: serie.value.director,
             temporadas: serie.value.temporadas,
-            categoria: serie.value.categoria, // Asegúrate de incluir la categoría aquí
+            categoria: serie.value.categoria,
+            tipoClasificacion: serie.value.tipoClasificacion, // Asegúrate de usar "tipoClasificacion"
             fechaEstreno: serie.value.fechaEstreno,
         }
         if (props.modoEdicion) {
@@ -80,6 +91,16 @@ async function handleSave() {
             <div class="flex items-center gap-4 mb-4">
                 <label for="categoria" class="font-semibold w-4">Categoría</label>
                 <InputText id="categoria" v-model="serie.categoria" class="flex-auto" autocomplete="off"/>
+            </div>
+            <div class="flex items-center gap-4 mb-4">
+                <label for="tipoClasificacion" class="font-semibold w-4">Tipo Clasificación</label>
+                <Dropdown id="tipoClasificacion"
+                          v-model="serie.tipoClasificacion"
+                          :options="tipoClasificacionOptions"
+                          optionLabel="label"
+                          optionValue="value"
+                          placeholder="Selecciona una clasificación"
+                          class="flex-auto"/>
             </div>
             <div class="flex items-center gap-4 mb-4">
                 <label for="fechaEstreno" class="font-semibold w-4">Fecha de Estreno</label>

@@ -1,41 +1,41 @@
 <script setup lang="ts">
-import type { Serie } from '../../models/serie'
-import http from '../../plugins/axios'
-import Button from 'primevue/button'
-import Dialog from 'primevue/dialog'
-import { onMounted, ref } from 'vue'
+import type { Serie } from '../../models/serie';
+import http from '../../plugins/axios';
+import Button from 'primevue/button';
+import Dialog from 'primevue/dialog';
+import { onMounted, ref } from 'vue';
 
-const ENDPOINT = 'series'
-let series = ref<Serie[]>([])
+const ENDPOINT = 'series';
+let series = ref<Serie[]>([]);
 
-const emit = defineEmits(['edit'])
-const serieDelete = ref<Serie | null>(null)
-const mostrarConfirmDialog = ref<boolean>(false)
+const emit = defineEmits(['edit']);
+const serieDelete = ref<Serie | null>(null);
+const mostrarConfirmDialog = ref<boolean>(false);
 
 async function obtenerLista() {
-  series.value = await http.get(ENDPOINT).then((response) => response.data)
+  series.value = await http.get(ENDPOINT).then((response) => response.data);
 }
 
 function emitirEdicion(serie: Serie) {
-  emit('edit', serie)
+  emit('edit', serie);
 }
 
 function mostrarEliminarConfirm(serie: Serie) {
-  serieDelete.value = serie
-  mostrarConfirmDialog.value = true
+  serieDelete.value = serie;
+  mostrarConfirmDialog.value = true;
 }
 
 async function eliminar() {
-  await http.delete(`${ENDPOINT}/${serieDelete.value?.id}`)
-  obtenerLista()
-  mostrarConfirmDialog.value = false
+  await http.delete(`${ENDPOINT}/${serieDelete.value?.id}`);
+  obtenerLista();
+  mostrarConfirmDialog.value = false;
 }
 
 onMounted(() => {
-  obtenerLista()
-})
+  obtenerLista();
+});
 
-defineExpose({ obtenerLista })
+defineExpose({ obtenerLista });
 </script>
 
 <template>
@@ -48,8 +48,10 @@ defineExpose({ obtenerLista })
           <th>Sinopsis</th>
           <th>Director</th>
           <th>Temporadas</th>
-          <th>Categoria</th>
+          <th>Categoría</th>
+          <th>Tipo Clasificación</th>
           <th>Fecha de Estreno</th>
+          <th>acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -60,6 +62,7 @@ defineExpose({ obtenerLista })
           <td>{{ serie.director }}</td>
           <td>{{ serie.temporadas }}</td>
           <td>{{ serie.categoria }}</td>
+          <td>{{ serie.tipoClasificacion }}</td> <!-- Asegúrate de usar "tipoClasificacion" -->
           <td>{{ serie.fechaEstreno }}</td>
           <td>
             <Button icon="pi pi-pencil" aria-label="Editar" text @click="emitirEdicion(serie)" />
